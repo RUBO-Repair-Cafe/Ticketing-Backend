@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TicketsModule } from './tickets/tickets.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -21,7 +22,8 @@ import { TicketsModule } from './tickets/tickets.module';
       }),
       inject: [ConfigService]
     }),
-    TicketsModule
+    TicketsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

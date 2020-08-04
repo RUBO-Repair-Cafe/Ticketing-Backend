@@ -1,0 +1,737 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Repair Cafe Ticket System",
+		"description": "The API for the Repair Cafe Ticket System",
+		"version": "1.0",
+		"contact": {}
+	},
+	"tags": [
+		{
+			"name": "auth",
+			"description": ""
+		},
+		{
+			"name": "comments",
+			"description": ""
+		},
+		{
+			"name": "customers",
+			"description": ""
+		},
+		{
+			"name": "images",
+			"description": ""
+		},
+		{
+			"name": "tickets",
+			"description": ""
+		},
+		{
+			"name": "users",
+			"description": ""
+		}
+	],
+	"servers": [],
+	"components": {
+		"schemas": {
+			"Image": {
+				"type": "object",
+				"properties": {
+					"imageId": {
+						"type": "number"
+					},
+					"path": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"imageId",
+					"path"
+				]
+			},
+			"Comment": {
+				"type": "object",
+				"properties": {
+					"commentId": {
+						"type": "number"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"author": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"commentId",
+					"comment",
+					"author"
+				]
+			},
+			"Customer": {
+				"type": "object",
+				"properties": {
+					"customerId": {
+						"type": "number"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"zip": {
+						"type": "number"
+					},
+					"city": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"tickets": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Ticket"
+						}
+					}
+				},
+				"required": [
+					"customerId",
+					"firstName",
+					"lastName",
+					"address",
+					"zip",
+					"city",
+					"email",
+					"phone",
+					"tickets"
+				]
+			},
+			"Ticket": {
+				"type": "object",
+				"properties": {
+					"ticketId": {
+						"type": "number"
+					},
+					"ticketHeader": {
+						"type": "string"
+					},
+					"ticketBody": {
+						"type": "string"
+					},
+					"ticketAuthor": {
+						"$ref": "#/components/schemas/User"
+					},
+					"assignedUsers": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/User"
+						}
+					},
+					"assignedCustomer": {
+						"$ref": "#/components/schemas/Customer"
+					},
+					"ticketStatus": {
+						"enum": [
+							"CREATED",
+							"NEEDS_TRIAGE",
+							"ASSIGNED",
+							"DOING",
+							"DONE",
+							"FAILED"
+						],
+						"type": "string"
+					}
+				},
+				"required": [
+					"ticketId",
+					"ticketHeader",
+					"ticketBody",
+					"ticketAuthor",
+					"assignedUsers",
+					"assignedCustomer",
+					"ticketStatus"
+				]
+			},
+			"User": {
+				"type": "object",
+				"properties": {
+					"userId": {
+						"type": "number"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"profilePicture": {
+						"$ref": "#/components/schemas/Image"
+					},
+					"comments": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Comment"
+						}
+					},
+					"createdTickets": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Ticket"
+						}
+					},
+					"assignedTickets": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Ticket"
+						}
+					}
+				},
+				"required": [
+					"userId",
+					"firstName",
+					"lastName",
+					"username",
+					"password",
+					"email",
+					"profilePicture",
+					"comments",
+					"createdTickets",
+					"assignedTickets"
+				]
+			},
+			"NewTicketDto": {
+				"type": "object",
+				"properties": {
+					"ticketHeader": {
+						"type": "string"
+					},
+					"ticketBody": {
+						"type": "string"
+					},
+					"ticketAuthor": {
+						"$ref": "#/components/schemas/User"
+					},
+					"assignedUsers": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/User"
+						}
+					},
+					"assignedCustomer": {
+						"$ref": "#/components/schemas/Customer"
+					},
+					"ticketStatus": {
+						"type": "string",
+						"enum": [
+							"CREATED",
+							"NEEDS_TRIAGE",
+							"ASSIGNED",
+							"DOING",
+							"DONE",
+							"FAILED"
+						]
+					}
+				},
+				"required": [
+					"ticketHeader",
+					"ticketBody",
+					"ticketAuthor",
+					"assignedUsers",
+					"assignedCustomer",
+					"ticketStatus"
+				]
+			},
+			"UpdateTicketDto": {
+				"type": "object",
+				"properties": {
+					"ticketHeader": {
+						"type": "string"
+					},
+					"ticketBody": {
+						"type": "string"
+					},
+					"assignedUsers": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/User"
+						}
+					},
+					"ticketStatus": {
+						"type": "string",
+						"enum": [
+							"CREATED",
+							"NEEDS_TRIAGE",
+							"ASSIGNED",
+							"DOING",
+							"DONE",
+							"FAILED"
+						]
+					},
+					"ticketId": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"ticketId"
+				]
+			},
+			"NewUserDto": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username",
+					"password",
+					"firstName",
+					"lastName",
+					"email"
+				]
+			},
+			"NewCustomerDto": {
+				"type": "object",
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"zip": {
+						"type": "number"
+					},
+					"city": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"address",
+					"zip",
+					"city",
+					"email",
+					"phone"
+				]
+			},
+			"LoginDataDto": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username",
+					"password"
+				]
+			},
+			"JwtResponseDto": {
+				"type": "object",
+				"properties": {
+					"access_token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"access_token"
+				]
+			}
+		}
+	},
+	"paths": {
+		"/tickets": {
+			"post": {
+				"operationId": "TicketsController_createOne",
+				"summary": "Create a new Ticket",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/NewTicketDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Ticket"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			},
+			"get": {
+				"operationId": "TicketsController_getAll",
+				"summary": "Get all Tickets",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Ticket"
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			},
+			"patch": {
+				"operationId": "TicketsController_updateOne",
+				"summary": "Update one Ticket",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTicketDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Ticket"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/tickets/{id}": {
+			"get": {
+				"operationId": "TicketsController_getOne",
+				"summary": "Get one Ticket",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Ticket"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/users": {
+			"post": {
+				"operationId": "UsersController_createUser",
+				"summary": "Create a new User",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/NewUserDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized."
+					}
+				},
+				"tags": [
+					"users"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/customers": {
+			"get": {
+				"operationId": "CustomersController_getAll",
+				"summary": "Get all customers",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Customer"
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"customers"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			},
+			"post": {
+				"operationId": "CustomersController_createOne",
+				"summary": "Create new customer",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/NewCustomerDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Customer"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					}
+				},
+				"tags": [
+					"customers"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/customers/{id}": {
+			"get": {
+				"operationId": "CustomersController_getOne",
+				"summary": "Get one customer",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Customer"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"customers"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "AuthController_login",
+				"summary": "Login a user",
+				"description": "Logs in the user with his credentials and then returns a JWT for further use with the API",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginDataDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/JwtResponseDto"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		}
+	}
+}

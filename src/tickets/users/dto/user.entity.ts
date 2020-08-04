@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToMany } from "typeorm";
-import { Image } from "../images/images.entity";
-import { Comment } from "../comments/dto/comment.entity";
-import { Ticket } from "../ticket.entity";
+import { Image } from "../../images/images.entity";
+import { Comment } from "../../comments/dto/comment.entity";
+import { Ticket } from "../../dto/ticket.entity";
 
 @Entity()
 export class User{
@@ -17,7 +17,7 @@ export class User{
   @Column({ nullable: false , unique: true})
   username: string;
 
-  @Column({nullable: false})
+  @Column({nullable: false, select: false})
   password: string;
 
   @Column({nullable: false})

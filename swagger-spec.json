@@ -293,6 +293,21 @@
 					"ticketId"
 				]
 			},
+			"NewCommentDto": {
+				"type": "object",
+				"properties": {
+					"comment": {
+						"type": "string"
+					},
+					"ticket": {
+						"$ref": "#/components/schemas/Ticket"
+					}
+				},
+				"required": [
+					"comment",
+					"ticket"
+				]
+			},
 			"NewUserDto": {
 				"type": "object",
 				"properties": {
@@ -520,6 +535,91 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/Ticket"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/comments": {
+			"post": {
+				"operationId": "CommentsController_createOne",
+				"summary": "Create a new Comment",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/NewCommentDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Comment"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
+					},
+					"404": {
+						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/comments/{id}": {
+			"get": {
+				"operationId": "CommentsController_getAll",
+				"summary": "Get one Comment",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Comment"
 								}
 							}
 						}

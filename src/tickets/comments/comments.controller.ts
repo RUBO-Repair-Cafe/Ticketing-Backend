@@ -4,7 +4,7 @@ import { CommentsService } from './comments.service';
 import { NewCommentDto } from './dto/newComment.dto';
 import { Comment } from './dto/comment.entity';
 
-@ApiTags('tickets')
+@ApiTags('comments')
 @ApiBearerAuth()
 @Controller('comments')
 export class CommentsController {

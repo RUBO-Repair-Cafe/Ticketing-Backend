@@ -262,6 +262,9 @@
 			"UpdateTicketDto": {
 				"type": "object",
 				"properties": {
+					"ticketId": {
+						"type": "number"
+					},
 					"ticketHeader": {
 						"type": "string"
 					},
@@ -284,9 +287,6 @@
 							"DONE",
 							"FAILED"
 						]
-					},
-					"ticketId": {
-						"type": "number"
 					}
 				},
 				"required": [
@@ -590,7 +590,7 @@
 					}
 				},
 				"tags": [
-					"tickets"
+					"comments"
 				],
 				"security": [
 					{
@@ -632,7 +632,7 @@
 					}
 				},
 				"tags": [
-					"tickets"
+					"comments"
 				],
 				"security": [
 					{

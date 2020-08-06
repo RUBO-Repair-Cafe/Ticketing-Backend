@@ -5,6 +5,7 @@ import { Ticket } from './dto/ticket.entity';
 import { NewTicketDto } from './dto/newTicket.dto';
 import { UpdateTicketDto } from './dto/updateTicket.dto';
 import { updateObject } from 'src/updateObject.helper';
+import { Comment } from './comments/dto/comment.entity';
 
 @Injectable()
 export class TicketsService {
@@ -43,5 +44,13 @@ export class TicketsService {
     const updated = updateObject(ticket, updateData);
     await this._ticketRepo.save(updated);
     return this.getOne(updateData.ticketId)
+  }
+
+  async getComments(ticketId: number): Promise<Comment[]> {
+    const ticket = await this._ticketRepo.findOne({ where: {ticketId}, relations: ['comments']});
+    if (!ticket && !ticket.comments && ticket.comments.length === 0) {
+      throw new NotFoundException();
+    }
+    return ticket.comments;
   }
 }

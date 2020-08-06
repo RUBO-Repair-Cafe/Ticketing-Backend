@@ -44,4 +44,11 @@ export class TicketsController {
   updateOne(@Body() updateData: UpdateTicketDto): Promise<Ticket>{
     return this._ticketService.updateTicket(updateData);
   }
+
+  @Get(':id/comments')
+  @ApiOperation({ summary: 'Gets all comments for the ticket' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  getComments(@Param('id') ticketId: string) {
+    
+  }
 }

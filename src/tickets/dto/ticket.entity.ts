@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToMany } from "typeorm";
 import { User } from "../users/dto/user.entity";
 import { Customer } from "../customers/customers.entity";
+import { Comment } from "../comments/dto/comment.entity";
 
 export enum TicketStatus{
   CREATED,
@@ -34,4 +35,7 @@ export class Ticket{
 
   @Column({type: 'enum', enum: TicketStatus, default: TicketStatus.CREATED})
   ticketStatus: TicketStatus;
+
+  @OneToMany( type => Comment, comment => comment.ticket)
+  comments: Comment[];
 }

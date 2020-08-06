@@ -50,25 +50,6 @@
 					"path"
 				]
 			},
-			"Comment": {
-				"type": "object",
-				"properties": {
-					"commentId": {
-						"type": "number"
-					},
-					"comment": {
-						"type": "string"
-					},
-					"author": {
-						"$ref": "#/components/schemas/User"
-					}
-				},
-				"required": [
-					"commentId",
-					"comment",
-					"author"
-				]
-			},
 			"Customer": {
 				"type": "object",
 				"properties": {
@@ -149,6 +130,12 @@
 							"FAILED"
 						],
 						"type": "string"
+					},
+					"comments": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Comment"
+						}
 					}
 				},
 				"required": [
@@ -158,7 +145,31 @@
 					"ticketAuthor",
 					"assignedUsers",
 					"assignedCustomer",
-					"ticketStatus"
+					"ticketStatus",
+					"comments"
+				]
+			},
+			"Comment": {
+				"type": "object",
+				"properties": {
+					"commentId": {
+						"type": "number"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"author": {
+						"$ref": "#/components/schemas/User"
+					},
+					"ticket": {
+						"$ref": "#/components/schemas/Ticket"
+					}
+				},
+				"required": [
+					"commentId",
+					"comment",
+					"author",
+					"ticket"
 				]
 			},
 			"User": {

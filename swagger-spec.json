@@ -34,7 +34,57 @@
 	],
 	"servers": [],
 	"components": {
+		"securitySchemes": {
+			"bearer": {
+				"scheme": "bearer",
+				"bearerFormat": "JWT",
+				"type": "http"
+			}
+		},
 		"schemas": {
+			"NewTicketDto": {
+				"type": "object",
+				"properties": {
+					"assignedUsers": {
+						"type": "array",
+						"items": {
+							"type": "number"
+						}
+					},
+					"ticketHeader": {
+						"type": "string"
+					},
+					"ticketBody": {
+						"type": "string"
+					},
+					"assignedCustomer": {
+						"type": "object",
+						"properties": {
+							"customerId": {
+								"required": true,
+								"type": "number"
+							}
+						}
+					},
+					"ticketStatus": {
+						"type": "string",
+						"enum": [
+							"CREATED",
+							"NEEDS_TRIAGE",
+							"ASSIGNED",
+							"DOING",
+							"DONE",
+							"FAILED"
+						]
+					}
+				},
+				"required": [
+					"ticketHeader",
+					"ticketBody",
+					"assignedCustomer",
+					"ticketStatus"
+				]
+			},
 			"Image": {
 				"type": "object",
 				"properties": {
@@ -226,48 +276,6 @@
 					"comments",
 					"createdTickets",
 					"assignedTickets"
-				]
-			},
-			"NewTicketDto": {
-				"type": "object",
-				"properties": {
-					"ticketHeader": {
-						"type": "string"
-					},
-					"ticketBody": {
-						"type": "string"
-					},
-					"ticketAuthor": {
-						"$ref": "#/components/schemas/User"
-					},
-					"assignedUsers": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/User"
-						}
-					},
-					"assignedCustomer": {
-						"$ref": "#/components/schemas/Customer"
-					},
-					"ticketStatus": {
-						"type": "string",
-						"enum": [
-							"CREATED",
-							"NEEDS_TRIAGE",
-							"ASSIGNED",
-							"DOING",
-							"DONE",
-							"FAILED"
-						]
-					}
-				},
-				"required": [
-					"ticketHeader",
-					"ticketBody",
-					"ticketAuthor",
-					"assignedUsers",
-					"assignedCustomer",
-					"ticketStatus"
 				]
 			},
 			"UpdateTicketDto": {
@@ -555,6 +563,48 @@
 					},
 					"404": {
 						"description": "Not Found."
+					}
+				},
+				"tags": [
+					"tickets"
+				],
+				"security": [
+					{
+						"bearer": []
+					}
+				]
+			}
+		},
+		"/tickets/{id}/comments": {
+			"get": {
+				"operationId": "TicketsController_getComments",
+				"summary": "Gets all comments for the ticket",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"schema": {
+							"type": "number"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Comment"
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden."
 					}
 				},
 				"tags": [

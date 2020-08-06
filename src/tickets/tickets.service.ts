@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ticket } from './dto/ticket.entity';
@@ -6,13 +6,16 @@ import { NewTicketDto } from './dto/newTicket.dto';
 import { UpdateTicketDto } from './dto/updateTicket.dto';
 import { updateObject } from 'src/updateObject.helper';
 import { Comment } from './comments/dto/comment.entity';
+import { User } from './users/dto/user.entity';
 
 @Injectable()
 export class TicketsService {
 
   constructor(
     @InjectRepository(Ticket)
-    private _ticketRepo: Repository<Ticket>
+    private _ticketRepo: Repository<Ticket>,
+    @InjectRepository(User)
+    private _userRepo: Repository<User>
   ) {}
 
   async getOne(ticketId: number): Promise<Ticket>{
@@ -31,8 +34,10 @@ export class TicketsService {
     return tickets;
   }
 
-  async createOne(newTicketData: NewTicketDto): Promise<Ticket>{
-    const newTicket = this._ticketRepo.create(newTicketData);
+  async createOne(newTicketData: NewTicketDto, userId: number): Promise<Ticket>{
+    const newTicket: Partial<Ticket> = this._ticketRepo.create(newTicketData);
+    const author = this._userRepo.create({userId});
+    newTicket.ticketAuthor = author;
     return this._ticketRepo.save(newTicket);
   }
 

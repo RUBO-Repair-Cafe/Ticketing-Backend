@@ -1,12 +1,13 @@
 import { TicketStatus } from "./ticket.entity";
-import { User } from "../users/dto/user.entity";
-import { Customer } from "../customers/customers.entity";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class NewTicketDto{
   ticketHeader: string;
   ticketBody: string;
-  ticketAuthor: User;
-  assignedUsers: User[];
-  assignedCustomer: Customer;
+
+  @ApiProperty({type: () => [Number]})
+  assignedUsers?: [{userId: number}];
+  
+  assignedCustomer: {customerId: number};
   ticketStatus: TicketStatus;
 }

@@ -1,9 +1,12 @@
-import { Controller, Post, Body, Get, Param, Put, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Patch, Request, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { NewTicketDto } from './dto/newTicket.dto';
 import { TicketsService } from './tickets.service';
 import { Ticket } from './dto/ticket.entity';
 import { UpdateTicketDto } from './dto/updateTicket.dto';
+import { Comment } from './comments/dto/comment.entity';
+import { RequestWithUser } from 'src/request-with-user.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('tickets')
 @ApiBearerAuth()
@@ -17,8 +20,9 @@ export class TicketsController {
   @Post()
   @ApiOperation({ summary: 'Create a new Ticket' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  createOne(@Body() newTicketData: NewTicketDto): Promise<Ticket>{
-    return this._ticketService.createOne(newTicketData);
+  @UseGuards(JwtAuthGuard)
+  createOne(@Body() newTicketData: NewTicketDto, @Request() req: RequestWithUser): Promise<Ticket>{
+    return this._ticketService.createOne(newTicketData, req.user.userId);
   }
 
   @Get()
@@ -48,7 +52,7 @@ export class TicketsController {
   @Get(':id/comments')
   @ApiOperation({ summary: 'Gets all comments for the ticket' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  getComments(@Param('id') ticketId: string) {
-    
+  getComments(@Param('id') ticketId: number): Promise<Comment[]> {
+    return this._ticketService.getComments(ticketId);
   }
 }

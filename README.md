@@ -19,6 +19,17 @@ $ npm install
 
 ## Running the app
 
+This project requires a Postgres SQL Database to be available.  
+Create a ``.env`` file in the root directory of this project. (Next to gitignore, readme etc...)  
+And set these properties:  
+- ``DATABASE_HOST`` (IP or URL to DB)
+- ``DATABASE_PORT`` (Port used by DB-Server)
+- ``DATABASE_USER`` (Username to access DB-Server)
+- ``DATABASE_PASSWORD`` (Password for the user)
+
+It also makes use of JWT for user authentication. To sign JWTs a secret is required.  
+Set ``JWT_SECRET`` in the .env as well. Keep in mind that this is a **secret** so make sure that it is protected and secure.
+
 ```bash
 # development
 $ npm run start

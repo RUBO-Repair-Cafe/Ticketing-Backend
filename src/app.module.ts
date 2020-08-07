@@ -16,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
         port: +configService.get('DATABASE_PORT'),
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
-        database: 'repaircafe',
+        database: configService.get('DATABASE_NAME') || 'repaircafe',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
